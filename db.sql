@@ -1,0 +1,36 @@
+CREATE TABLE Buyer (
+    email VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(50),
+    phoneNo BIGINT,
+    password VARCHAR(50)
+);
+
+CREATE TABLE Category (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE Item (
+    id VARCHAR(36) PRIMARY KEY,  -- UUID v4
+    name VARCHAR(50),
+    model VARCHAR(50),
+    category_id INTEGER,
+    FOREIGN KEY (category_id) REFERENCES Category(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Cart (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email VARCHAR(50),
+    item_id VARCHAR(36),
+    quantity INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (email) REFERENCES Buyer(email) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES Item(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Metadata(
+    key VARCHAR(50) PRIMARY KEY,
+    value VARCHAR(50)
+);
+
+INSERT INTO Metadata VALUES("Version", "0.0.1");

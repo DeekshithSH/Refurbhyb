@@ -1,0 +1,31 @@
+# Maven
+target/
+*.log
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# IntelliJ / Eclipse / VSCode (optional)
+.idea/
+*.iml
+*.ipr
+*.iws
+*.class
+*.swp
+*.swo
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build tools
+.gradle/
+build/
+out/
+
+# Logs
+*.log
