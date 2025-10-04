@@ -10,33 +10,31 @@ public class SellerPanel extends JPanel {
 
     public SellerPanel(Main mainApp) {
         setLayout(new BorderLayout(20, 20));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
         // Title
-        JLabel title = new JLabel("📦 Seller Home", SwingConstants.CENTER);
-        add(title, BorderLayout.NORTH);
+        add(new JLabel("📦 Seller Home", SwingConstants.CENTER), BorderLayout.NORTH);
 
-        // Center panel
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(3, 1, 20, 20));
+        // Vertical button panel
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new GridLayout(0, 1, 0, 20)); // one column, variable rows, 20px spacing
 
         JButton ordersBtn = new JButton("🛒 Orders");
         JButton addItemBtn = new JButton("➕ Add Item");
         JButton myItemsBtn = new JButton("📦 My Items");
-        JButton logoutBtn = new JButton("➜] Logout");
+        JButton logoutBtn = new JButton("➜ Logout");
 
-        buttonPanel.add(ordersBtn);
-        buttonPanel.add(addItemBtn);
-        buttonPanel.add(myItemsBtn);
-        buttonPanel.add(logoutBtn);
+        buttons.add(ordersBtn);
+        buttons.add(addItemBtn);
+        buttons.add(myItemsBtn);
+        buttons.add(logoutBtn);
 
-        add(buttonPanel, BorderLayout.CENTER);
+        add(buttons, BorderLayout.CENTER);
 
-        // Button actions
+        // Actions
         ordersBtn.addActionListener(_ -> {
             List<Types.OrderItem> sellerOrders = mainApp.db.getUserOrders(null, mainApp.user.uid());
-            SellerOrdersPanel sellerOrdersPanel = new SellerOrdersPanel(mainApp, sellerOrders);
-            mainApp.addPanel(sellerOrdersPanel, "sellerOrders");
+            mainApp.addPanel(new SellerOrdersPanel(mainApp, sellerOrders), "sellerOrders");
             mainApp.showScreen("sellerOrders");
         });
 

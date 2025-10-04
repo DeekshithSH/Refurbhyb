@@ -62,7 +62,6 @@ public class SellerMyItemsPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(listPanel);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Back button
         JButton backBtn = new JButton("⬅ Back");
         backBtn.addActionListener(_ -> mainApp.showScreen("home"));
         add(backBtn, BorderLayout.SOUTH);

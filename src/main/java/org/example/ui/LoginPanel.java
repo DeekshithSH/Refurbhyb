@@ -7,29 +7,28 @@ import org.example.Types.*;
 
 public class LoginPanel extends JPanel {
     public LoginPanel(Main mainApp) {
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        // Top panel: Back button
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton backBtn = new JButton("⬅ Back");
-        backBtn.addActionListener(_ -> mainApp.showScreen("welcome"));
-        topPanel.add(backBtn);
-        add(topPanel, BorderLayout.NORTH);
-
-        // Center panel: Login form
-        JPanel formPanel = new JPanel(new GridLayout(3, 2, 5, 5));
+        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         JLabel userLabel = new JLabel("Email:");
-        JTextField userField = new JTextField();
+        JTextField userField = new JTextField(15);
 
         JLabel passLabel = new JLabel("Password:");
-        JPasswordField passField = new JPasswordField();
+        JPasswordField passField = new JPasswordField(15);
 
         JButton loginButton = new JButton("Login");
+        JButton backButton = new JButton("Back");
+
+        add(userLabel);
+        add(userField);
+        add(passLabel);
+        add(passField);
+        add(loginButton);
+        add(backButton);
+
+        backButton.addActionListener(_ -> mainApp.showScreen("welcome"));
 
         loginButton.addActionListener(_ -> {
-            String email = userField.getText();
+            String email = userField.getText().trim();
             String password = new String(passField.getPassword());
 
             String uid = mainApp.db.validate(email, password);
@@ -38,13 +37,15 @@ public class LoginPanel extends JPanel {
                         "Invalid username or password!",
                         "Login Error",
                         JOptionPane.ERROR_MESSAGE);
-            } else {
-                User user = mainApp.db.getUserProfile(uid);
-                mainApp.setUser(user);
+                return;
+            }
 
-                String[] options = {"Buyer", "Seller"};
-                int choice = JOptionPane.showOptionDialog(
-                    null,
+            User user = mainApp.db.getUserProfile(uid);
+            mainApp.setUser(user);
+
+            String[] options = {"Buyer", "Seller"};
+            int choice = JOptionPane.showOptionDialog(
+                    this,
                     "Login as:",
                     "Select Role",
                     JOptionPane.DEFAULT_OPTION,
@@ -52,27 +53,14 @@ public class LoginPanel extends JPanel {
                     null,
                     options,
                     options[0]
-                );
+            );
 
-                JPanel homePanel;
-                if(choice == 0){
-                    homePanel = new HomePanel(mainApp);
-                } else {
-                    homePanel = new SellerPanel(mainApp);
-                }
+            JPanel homePanel = (choice == 0)
+                    ? new HomePanel(mainApp)
+                    : new SellerPanel(mainApp);
 
-                mainApp.addPanel(homePanel, "home");
-                mainApp.showScreen("home");
-            }
+            mainApp.addPanel(homePanel, "home");
+            mainApp.showScreen("home");
         });
-
-        formPanel.add(userLabel);
-        formPanel.add(userField);
-        formPanel.add(passLabel);
-        formPanel.add(passField);
-        formPanel.add(new JLabel());
-        formPanel.add(loginButton);
-
-        add(formPanel, BorderLayout.CENTER);
     }
 }

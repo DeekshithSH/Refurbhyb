@@ -5,58 +5,38 @@ import java.awt.*;
 import org.example.Main;
 
 public class HomePanel extends JPanel {
-    private JPanel resultsContainer;
-    private Main mainApp;
+    private final Main mainApp;
 
     public HomePanel(Main mainApp) {
         this.mainApp = mainApp;
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setLayout(new BorderLayout());
 
-        // Container for top panels
-        JPanel topContainer = new JPanel();
-        topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
-        add(topContainer, BorderLayout.NORTH);
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        JButton myOrdersButton = new JButton("My Orders");
+        JButton logoutButton = new JButton("Logout");
+        topPanel.add(myOrdersButton);
+        topPanel.add(logoutButton);
+        add(topPanel, BorderLayout.NORTH);
 
-        // Top panel 1
-        JPanel quickPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        JButton myOrdersButton = new JButton("📦 My Orders");
-        JButton logOutButton = new JButton("LogOut");
+        JPanel homeView = createHomeView();
 
-        quickPanel.add(myOrdersButton);
-        quickPanel.add(logOutButton);
+        add(homeView, BorderLayout.CENTER);
 
-        topContainer.add(quickPanel);
+        JPanel bottomNav = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
+        JButton homeButton = new JButton("🏠 Home");
+        JButton searchButton = new JButton("🔍 Search");
+        bottomNav.add(homeButton);
+        bottomNav.add(searchButton);
+        add(bottomNav, BorderLayout.SOUTH);
 
-        // Top panel 2
-        JPanel searchPanel = new JPanel(new BorderLayout(5, 0));
-        JTextField searchField = new JTextField();
-        JButton searchButton = new JButton("🔍");
-        searchPanel.add(searchField, BorderLayout.CENTER);
-        searchPanel.add(searchButton, BorderLayout.EAST);
+        SearchPanel searchPanel = new SearchPanel(mainApp);
+        mainApp.addPanel(searchPanel, "search");
 
-        topContainer.add(searchPanel);
-        topContainer.add(Box.createVerticalStrut(10));
+        searchButton.addActionListener(_ -> mainApp.showScreen("search"));
 
-        // Center panel
-        resultsContainer = new JPanel();
-        resultsContainer.setLayout(new BoxLayout(resultsContainer, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(resultsContainer);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        add(scrollPane, BorderLayout.CENTER);
-
-        JLabel welcomeLabel = new JLabel("Welcome, " + mainApp.user.name());
-        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        resultsContainer.add(Box.createVerticalStrut(20));
-        resultsContainer.add(welcomeLabel);
-        resultsContainer.add(Box.createVerticalStrut(20));
-
-        // Button actions
-        searchButton.addActionListener(_ -> {
-            String keyword = searchField.getText().trim();
-            if (!keyword.isEmpty()) {
-                showSearchResults(keyword);
-            }
+        logoutButton.addActionListener(_ -> {
+            mainApp.user = null;
+            mainApp.showScreen("welcome");
         });
 
         myOrdersButton.addActionListener(_ -> {
@@ -64,21 +44,18 @@ public class HomePanel extends JPanel {
             mainApp.addPanel(myOrders, "MyOrder");
             mainApp.showScreen("MyOrder");
         });
-
-        logOutButton.addActionListener(_ -> {
-            mainApp.user = null;
-            mainApp.showScreen("welcome");
-        });
     }
 
-    private void showSearchResults(String keyword) {
-        resultsContainer.removeAll();
-        Search searchPanel = new Search(mainApp, keyword, null);
-        searchPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        resultsContainer.add(Box.createVerticalStrut(10));
-        resultsContainer.add(searchPanel);
-        resultsContainer.add(Box.createVerticalGlue());
-        resultsContainer.revalidate();
-        resultsContainer.repaint();
+    private JPanel createHomeView() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JLabel welcomeLabel = new JLabel("Welcome, " + mainApp.user.name(), SwingConstants.CENTER);
+        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(Box.createVerticalStrut(40));
+        panel.add(welcomeLabel);
+        panel.add(Box.createVerticalGlue());
+
+        return panel;
     }
 }

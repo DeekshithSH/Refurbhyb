@@ -14,24 +14,19 @@ public class Main {
 
     public Main() {
         db = new Database("jdbc:mysql://localhost:3306/refurby?user=root&password=mysql");
-        db.getConditions();
-        frame = new JFrame("Simple App");
+        frame = new JFrame("Refurbhy");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 600);
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        // Screens
-         WelcomePanel welcomePanel = new WelcomePanel(this);
+        WelcomePanel welcomePanel = new WelcomePanel(this);
         LoginPanel loginPanel = new LoginPanel(this);
-        // Add Home after login
-        // HomePanel homePanel = new HomePanel(this);
         SignUp signupPanel = new SignUp(this);
 
         mainPanel.add(welcomePanel, "welcome");
         mainPanel.add(loginPanel, "login");
-        // mainPanel.add(homePanel, "home");
         mainPanel.add(signupPanel, "signup");
 
         frame.add(mainPanel);
@@ -59,23 +54,35 @@ public class Main {
     }
 }
 
-
 class WelcomePanel extends JPanel {
     public WelcomePanel(Main mainApp) {
-        setLayout(new FlowLayout());
+        setLayout(new BorderLayout());
+        setBackground(Color.WHITE);
 
-        JLabel label = new JLabel("Welcome! Please login.");
+        JLabel label = new JLabel("Welcome! Please log in or sign up.", SwingConstants.CENTER);
+        label.setFont(new Font("SansSerif", Font.BOLD, 18));
+        label.setBorder(BorderFactory.createEmptyBorder(40, 0, 30, 0));
+
         JButton loginButton = new JButton("Login");
-        JButton signupButton = new JButton("SignUp");
+        JButton signupButton = new JButton("Sign Up");
 
-        loginButton.addActionListener(_ -> {
-            mainApp.showScreen("login");
-        });
-        signupButton.addActionListener(_ -> {
-            mainApp.showScreen("signup");
-        });
-        add(label);
-        add(loginButton);
-        add(signupButton);
+        Dimension buttonSize = new Dimension(120, 35);
+        loginButton.setPreferredSize(buttonSize);
+        signupButton.setPreferredSize(buttonSize);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        buttonPanel.add(loginButton);
+        buttonPanel.add(signupButton);
+
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(label, BorderLayout.NORTH);
+        centerPanel.add(buttonPanel, BorderLayout.CENTER);
+
+        add(centerPanel, BorderLayout.CENTER);
+
+        loginButton.addActionListener(_ -> mainApp.showScreen("login"));
+        signupButton.addActionListener(_ -> mainApp.showScreen("signup"));
     }
 }
+

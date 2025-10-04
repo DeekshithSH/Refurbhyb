@@ -26,17 +26,14 @@ public class SellerOrdersPanel extends JPanel {
                 JPanel orderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
                 orderPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-                // Item Name
                 JLabel itemLabel = new JLabel("Item ID: " + order.item_id());
-                JLabel tnId = new JLabel("Transaction Id: " + order.tracking_id());
+                JLabel tnId = new JLabel("Transaction Id: " + order.transaction_id());
                 itemLabel.setPreferredSize(new Dimension(200, 25));
 
-                // verify button
                 JButton verifyBtn = new JButton(order.payment_success() ? "✅ Paid" : "💲 Verify Payment");
                 verifyBtn.setEnabled(!order.payment_success());
 
                 verifyBtn.addActionListener(_ -> {
-                    // Popup to add tracking id & partner
                     JPanel popupPanel = new JPanel(new GridLayout(2, 2, 5, 5));
                     JTextField trackingField = new JTextField();
                     JTextField partnerField = new JTextField();
@@ -57,9 +54,7 @@ public class SellerOrdersPanel extends JPanel {
                         String trackingId = trackingField.getText().trim();
                         String partner = partnerField.getText().trim();
                         if (!trackingId.isEmpty() && !partner.isEmpty()) {
-                            // Update order in DB
                             mainApp.db.verifyPaymentAndShip(order.id(), trackingId, partner);
-                            // Update button text
                             verifyBtn.setText("✅ Paid & Shipped");
                             verifyBtn.setEnabled(false);
                             JOptionPane.showMessageDialog(
@@ -90,7 +85,6 @@ public class SellerOrdersPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(listPanel);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Back button
         JButton backBtn = new JButton("⬅ Back");
         backBtn.addActionListener(_ -> mainApp.showScreen("home"));
         add(backBtn, BorderLayout.SOUTH);
