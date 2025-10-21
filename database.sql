@@ -42,8 +42,8 @@ CREATE TABLE Cart (
     FOREIGN KEY (item_id) REFERENCES Item(id) ON DELETE CASCADE
 );
 
---Seller will Update status like if payment successfull, shipped
---Shipping Partner, Tracking Id,
+-- Seller will Update status like if payment successfull, shipped
+-- Shipping Partner, Tracking Id,
 CREATE TABLE `Order` (
     id INT PRIMARY KEY AUTO_INCREMENT,
     uid VARCHAR(36), -- ID of user who bought the item
